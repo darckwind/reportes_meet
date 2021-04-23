@@ -66,11 +66,12 @@ function data_sorter(){
     $userKey = 'all';
     $applicationName = 'meet';
     $optParams =[
-        'maxResults' => 1000,
+        'maxResults' => 10,
     ];
     $results = $service->activities->listActivities(
         $userKey, $applicationName, $optParams);
-    print_r($results);
+
+
     $arrMeetData = [];
     $meeting_code ="";
     $duration_seconds= 0;
@@ -79,44 +80,38 @@ function data_sorter(){
     $device_type = "";
     $identifier = "";
     $conference_id = "";
-    $duration_seconds_tmp = 0;
 
     foreach ($results->getItems() as $res){
+        $duration_seconds_tmp =0;
         foreach ($res->getEvents()[0]->getParameters() as $rest) {
             switch ($rest->getName()) {
                 case "meeting_code":
-                    //print_r($rest->value."\n");
                     $meeting_code = $rest->value;
                     break;
                 case "duration_seconds":
-                    //print_r($rest->intValue."\n");
                     $duration_seconds = $rest->intValue;
-                    if($duration_seconds >= $duration_seconds_tmp){
+                    if($duration_seconds > $duration_seconds_tmp){
                         $duration_seconds_tmp = $duration_seconds;
                     }
                     break;
                 case "organizer_email":
-                    //print_r($rest->value."\n");
                     $organizer_email = $rest->value;
                     break;
                 case "display_name":
-                    //print_r($rest->value."\n");
                     $display_name = $rest->value;
                     break;
                 case "device_type":
-                    //print_r($rest->value."\n");
                     $device_type = $rest->value;
                     break;
                 case "identifier";
-                    //print_r($rest->value."\n");
                     $identifier = $rest->value;
                     break;
                 case "conference_id":
-                    //print_r($rest->value."\n");
                     $conference_id = $rest->value;
                     break;
             }
         }
+
         $id = $meeting_code."-".$conference_id;
         if(!array_key_exists($id,$arrMeetData)){
             $arrMeetData[$id]= [
@@ -126,6 +121,7 @@ function data_sorter(){
                 'organizer_email'=>$organizer_email
             ];
         }
+
         if(!array_key_exists('participante',$arrMeetData[$id])){
             $arrMeetData[$id]['participante'] = [];
         }
@@ -136,10 +132,10 @@ function data_sorter(){
             'conference_id' => $conference_id,
             'duration_seconds_in_call'=>$duration_seconds
         ];
-        $duration_seconds_tmp =0;
 
     }
-    //print_r($arrMeetData);
+
+
     $fp = fopen('results.json', 'w');
     fwrite($fp, json_encode($arrMeetData));
     fclose($fp);
@@ -152,9 +148,6 @@ function data_sorter(){
             $database->meetParticipant($meet_p['display_name'],$meet_p['device_type'],$meet_p['identifier'],$meet_p['conference_id'],$meet_p['duration_seconds_in_call']);
         }
     }
-
-
-
 
 }
 
