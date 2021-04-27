@@ -71,6 +71,10 @@ function data_sorter(){
     $results = $service->activities->listActivities(
         $userKey, $applicationName, $optParams);
 
+    $fp_raw = fopen('results_raw.json', 'w');
+    fwrite($fp_raw, serialize($results));
+    fclose($fp_raw);
+
 
     $arrMeetData = [];
     $meeting_code ="";
@@ -80,9 +84,14 @@ function data_sorter(){
     $device_type = "";
     $identifier = "";
     $conference_id = "";
+    $date_meet ="";
+    $hour_end_meet = "";
 
     foreach ($results->getItems() as $res){
         $duration_seconds_tmp =0;
+        $tmp_time =explode("T",$res->getId()->getTime());
+        $date_meet =  $tmp_time[0];
+        $hour_end_meet = explode(".",$tmp_time[1])[0];
         foreach ($res->getEvents()[0]->getParameters() as $rest) {
             switch ($rest->getName()) {
                 case "meeting_code":
@@ -118,7 +127,9 @@ function data_sorter(){
                 'meeting_code'=>$meeting_code,
                 'conference_id' => $conference_id,
                 'duration_seconds'=>$duration_seconds_tmp,
-                'organizer_email'=>$organizer_email
+                'organizer_email'=>$organizer_email,
+                'date_meet'=>$date_meet,
+                'hour_end_meet' => $hour_end_meet,
             ];
         }
 
@@ -135,15 +146,14 @@ function data_sorter(){
 
     }
 
-
     $fp = fopen('results.json', 'w');
-    fwrite($fp, json_encode($arrMeetData));
+    fwrite($fp, json_encode($arrMeetData,JSON_UNESCAPED_UNICODE));
     fclose($fp);
 
     $database = new database();
 
     foreach ($arrMeetData as $meet){
-        $database->meetData($meet['conference_id'],$meet['meeting_code'],$meet['duration_seconds'],$meet['organizer_email']);
+        $database->meetData($meet['conference_id'],$meet['meeting_code'],$meet['duration_seconds'],$meet['organizer_email'],$meet['date_meet'],$meet['hour_end_meet']);
         foreach ($meet['participante'] as $meet_p){
             $database->meetParticipant($meet_p['display_name'],$meet_p['device_type'],$meet_p['identifier'],$meet_p['conference_id'],$meet_p['duration_seconds_in_call']);
         }

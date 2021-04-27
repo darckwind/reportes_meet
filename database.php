@@ -14,13 +14,13 @@ class database{
         }
         return $conn;
     }
-    function meetData($conference_id,$meeting_code,$duration_seconds,$organizer_email){
+    function meetData($conference_id,$meeting_code,$duration_seconds,$organizer_email,$date_meet,$hour_end_meet){
 
         $conn = $this->connectionDB();
-        $sql = "INSERT INTO `meet_info` (`conference_id`, `meeting_code`, `duration_seconds`, `organizer_email`) VALUES ('".$conference_id."','".$meeting_code."',$duration_seconds,'".$organizer_email."')";
+        $sql = "INSERT INTO `meet_info` (`conference_id`, `meeting_code`, `duration_seconds`, `organizer_email`,`hour_end_meet`,`date_meet`) VALUES ('".$conference_id."','".$meeting_code."',$duration_seconds,'".$organizer_email."','".$hour_end_meet."','".$date_meet."')";
 
         if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully \n";
+            //echo "New record created successfully \n";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }
@@ -32,7 +32,7 @@ class database{
         $sql = "INSERT INTO `meet_participant` (`display_name`, `device_type`, `identifier`,`conference_id`, `duration_seconds_in_call`) VALUES ('".$display_name."','".$device_type."','".$identifier."','".$conference_id."',$duration_seconds)";
 
         if ($conn->query($sql) === TRUE) {
-            echo "New record created successfully \n";
+            //echo "New record created successfully \n";
         } else {
             echo "Error: " . $sql . "<br>" . $conn->error;
         }

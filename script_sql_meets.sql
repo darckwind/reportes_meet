@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS `meet_info` (
   `meeting_code` varchar(50) DEFAULT NULL,
   `duration_seconds` int(11) DEFAULT NULL,
   `organizer_email` varchar(50) DEFAULT NULL,
+  `date_meet` varchar(50) DEFAULT NULL,
+  `hour_end_meet` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`conference_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -39,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `meet_participant` (
   UNIQUE KEY `id` (`id`),
   KEY `FK_meet_participant_meet_info` (`conference_id`),
   CONSTRAINT `FK_meet_participant_meet_info` FOREIGN KEY (`conference_id`) REFERENCES `meet_info` (`conference_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3391 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6122 DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
