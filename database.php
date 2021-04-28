@@ -27,9 +27,9 @@ class database{
 
         $conn->close();
     }
-    function meetParticipant($display_name, $device_type, $identifier, $conference_id, $duration_seconds){
+    function meetParticipant($display_name, $device_type, $identifier, $conference_id, $duration_seconds,$location_region,$screencast_send_bitrate_kbps_mean,$screencast_recv_bitrate_kbps_mean,$screencast_recv_seconds,$screencast_send_seconds){
         $conn = $this->connectionDB();
-        $sql = "INSERT INTO `meet_participant` (`display_name`, `device_type`, `identifier`,`conference_id`, `duration_seconds_in_call`) VALUES ('".$display_name."','".$device_type."','".$identifier."','".$conference_id."',$duration_seconds)";
+        $sql = "INSERT INTO `meet_participant` (`display_name`, `device_type`, `identifier`,`conference_id`, `duration_seconds_in_call`,`location_region`,`screencast_send_bitrate_kbps_mean`,`screencast_recv_bitrate_kbps_mean`,`screencast_recv_seconds`,`screencast_send_seconds`) VALUES ('".$display_name."','".$device_type."','".$identifier."','".$conference_id."',$duration_seconds,'".$location_region."',$screencast_send_bitrate_kbps_mean,$screencast_recv_bitrate_kbps_mean,'".$screencast_recv_seconds."','".$screencast_send_seconds."')";
 
         if ($conn->query($sql) === TRUE) {
             //echo "New record created successfully \n";

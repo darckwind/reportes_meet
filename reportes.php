@@ -66,7 +66,7 @@ function data_sorter(){
     $userKey = 'all';
     $applicationName = 'meet';
     $optParams =[
-        'maxResults' => 10,
+        'maxResults' => 1,
     ];
     $results = $service->activities->listActivities(
         $userKey, $applicationName, $optParams);
@@ -84,6 +84,11 @@ function data_sorter(){
     $device_type = "";
     $identifier = "";
     $conference_id = "";
+    $location_region ="";
+    $screencast_send_bitrate_kbps_mean =0;
+    $screencast_recv_bitrate_kbps_mean = 0;
+    $screencast_recv_seconds = 0;
+    $screencast_send_seconds = 0;
     $date_meet ="";
     $hour_end_meet = "";
 
@@ -118,6 +123,21 @@ function data_sorter(){
                 case "conference_id":
                     $conference_id = $rest->value;
                     break;
+                case "location_region":
+                    $location_region = $rest->value;
+                    break;
+                case "screencast_send_bitrate_kbps_mean":
+                    $screencast_send_bitrate_kbps_mean = $rest->value;
+                    break;
+                case "screencast_recv_bitrate_kbps_mean":
+                    $screencast_recv_bitrate_kbps_mean = $rest->value;
+                    break;
+                case "screencast_recv_seconds":
+                    $screencast_recv_seconds = $rest->value;
+                    break;
+                case "screencast_send_seconds":
+                    $screencast_send_seconds = $rest->value;
+                    break;
             }
         }
 
@@ -141,10 +161,17 @@ function data_sorter(){
             'device_type'=>$device_type,
             'identifier'=>$identifier,
             'conference_id' => $conference_id,
-            'duration_seconds_in_call'=>$duration_seconds
+            'duration_seconds_in_call'=>$duration_seconds,
+            'location_region'=>$location_region,
+            'screencast_send_bitrate_kbps_mean'=>$screencast_send_bitrate_kbps_mean,
+            'screencast_recv_bitrate_kbps_mean'=>$screencast_recv_bitrate_kbps_mean,
+            'screencast_recv_seconds'=>$screencast_recv_seconds,
+            'screencast_send_seconds'=>$screencast_send_seconds
         ];
 
     }
+
+
 
     $fp = fopen('results.json', 'w');
     fwrite($fp, json_encode($arrMeetData,JSON_UNESCAPED_UNICODE));
@@ -155,7 +182,7 @@ function data_sorter(){
     foreach ($arrMeetData as $meet){
         $database->meetData($meet['conference_id'],$meet['meeting_code'],$meet['duration_seconds'],$meet['organizer_email'],$meet['date_meet'],$meet['hour_end_meet']);
         foreach ($meet['participante'] as $meet_p){
-            $database->meetParticipant($meet_p['display_name'],$meet_p['device_type'],$meet_p['identifier'],$meet_p['conference_id'],$meet_p['duration_seconds_in_call']);
+            $database->meetParticipant($meet_p['display_name'],$meet_p['device_type'],$meet_p['identifier'],$meet_p['conference_id'],$meet_p['duration_seconds_in_call'],$meet_p['location_region'],$meet_p['screencast_send_bitrate_kbps_mean'],$meet_p['screencast_recv_bitrate_kbps_mean'],strval($meet_p['screencast_recv_seconds']),strval($meet_p['screencast_send_seconds']));
         }
     }
 

@@ -37,11 +37,16 @@ CREATE TABLE IF NOT EXISTS `meet_participant` (
   `device_type` varchar(250) DEFAULT NULL,
   `identifier` varchar(250) DEFAULT NULL,
   `duration_seconds_in_call` int(11) DEFAULT NULL,
+  `location_region` varchar(50) DEFAULT NULL,
+  `screencast_send_bitrate_kbps_mean` int(11) DEFAULT NULL,
+  `screencast_recv_bitrate_kbps_mean` int(11) DEFAULT NULL,
+  `screencast_recv_seconds` varchar(50) DEFAULT NULL,
+  `screencast_send_seconds` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `FK_meet_participant_meet_info` (`conference_id`),
   CONSTRAINT `FK_meet_participant_meet_info` FOREIGN KEY (`conference_id`) REFERENCES `meet_info` (`conference_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6122 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6125 DEFAULT CHARSET=latin1;
 
 -- La exportación de datos fue deseleccionada.
 
