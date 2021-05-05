@@ -85,7 +85,7 @@ function data_sorter(){
     $identifier = "";
     $conference_id = "";
     $location_region ="";
-    $screencast_send_bitrate_kbps_mean =0;
+    $screencast_send_bitrate_kbps_mean = 0;
     $screencast_recv_bitrate_kbps_mean = 0;
     $screencast_recv_seconds = 0;
     $screencast_send_seconds = 0;
@@ -127,16 +127,24 @@ function data_sorter(){
                     $location_region = $rest->value;
                     break;
                 case "screencast_send_bitrate_kbps_mean":
-                    $screencast_send_bitrate_kbps_mean = $rest->value;
+                    if($rest->value>$screencast_send_bitrate_kbps_mean){
+                        $screencast_send_bitrate_kbps_mean = $rest->value;
+                    }
                     break;
                 case "screencast_recv_bitrate_kbps_mean":
-                    $screencast_recv_bitrate_kbps_mean = $rest->value;
+                    if($rest->value>$screencast_recv_bitrate_kbps_mean){
+                        $screencast_recv_bitrate_kbps_mean = $rest->value;
+                    }
                     break;
                 case "screencast_recv_seconds":
-                    $screencast_recv_seconds = $rest->value;
+                    if($rest->value>$screencast_recv_seconds){
+                        $screencast_recv_seconds = $rest->value;
+                    }
                     break;
                 case "screencast_send_seconds":
-                    $screencast_send_seconds = $rest->value;
+                    if($rest->value>$screencast_send_seconds){
+                        $screencast_send_seconds = $rest->value;
+                    }
                     break;
             }
         }
